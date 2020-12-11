@@ -8,29 +8,27 @@
       <h2>Ementa Não Encontrada</h2>
       <p>
         Pedimos desculpa pelo incómodo. Por favor entre em contacto com a equipa
-        <a
-          href="https://ementa.info"
-        >Ementa Digital</a>.
+        <a href="https://ementa.info">Ementa Digital</a>.
       </p>
     </div>
   </div>
 </template>
 <script>
-import bg_image_url from "@/assets/bg.png";
-import logo_url from "@/assets/ementa_digital_color.png";
+import bg_image_url from '@/assets/bg.png'
+import logo_url from '@/assets/ementa_digital_color.png'
 export default {
   data: () => {
     return {
       bg_image_url: bg_image_url,
       logo_url: logo_url
-    };
+    }
   },
   computed: {
     bg_style() {
-      return { backgroundImage: "url(" + this.bg_image_url + ")" };
+      return { backgroundImage: 'url(' + this.bg_image_url + ')' }
     }
   }
-};
+}
 </script>
 <style scoped lang="scss">
 .wrapper {

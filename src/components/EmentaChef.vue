@@ -3,31 +3,29 @@
     <div class="detail_header">
       <h2>{{ data.chef.title }}</h2>
     </div>
-    <div v-html="data.chef.content" class="detail_chef"></div>
+    <div class="detail_chef" v-html="data.chef.content"></div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["data"],
+  props: ['data'],
   data: () => {
     return {
       item: {},
-      style: ""
-    };
-  },
-  methods: {
-    set_style(topic) {
-      this.style = topic.image
-        ? { backgroundImage: "url(" + topic.image + ")" }
-        : { backgroundColor: topic.color };
+      style: ''
     }
   },
   created() {
-    this.set_style(this.data.chef);
-    this.$emit("style_header", this.style);
+    this.set_style(this.data.chef)
+    this.$emit('style_header', this.style)
+  },
+  methods: {
+    set_style(topic) {
+      this.style = topic.image ? { backgroundImage: 'url(' + topic.image + ')' } : { backgroundColor: topic.color }
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -86,7 +84,7 @@ export default {
         padding: 0;
         margin: 0;
         li {
-          font-family: "Prata";
+          font-family: 'Prata';
           font-weight: 400;
           color: #000;
           width: 50%;

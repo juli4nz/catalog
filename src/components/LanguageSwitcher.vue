@@ -1,14 +1,6 @@
 <template>
-  <div class="section_lang">
-    <v-select
-      class="lang_switcher"
-      v-model="languages.current"
-      :options="langs_list"
-      label="country_flag_url"
-      :clearable="false"
-      :searchable="false"
-      @input="set_language"
-    >
+  <div class="lang_btn">
+    <v-select v-model="languages.current" class="lang_switcher" :options="langs_list" label="country_flag_url" :clearable="false" :searchable="false" @input="set_language">
       <template slot="option" slot-scope="lang">
         <img :src="lang.country_flag_url" :alt="lang.native_name" />
       </template>
@@ -21,41 +13,34 @@
 
 <script>
 export default {
-  props: ["languages"],
+  props: ['languages'],
   data: () => {
     return {
       langs_list: [],
       is_open: false
-    };
-  },
-  methods: {
-    fetch_data() {
-      this.langs_list.push(this.languages.current);
-
-      if (this.languages.translations.length > 0) {
-        this.languages.translations.forEach(lang => {
-          this.langs_list.push(lang);
-        });
-      }
-    },
-    set_language(lang) {
-      this.$emit("switch_language", lang.id);
     }
   },
   mounted() {
-    this.fetch_data();
+    this.fetch_data()
+  },
+  methods: {
+    fetch_data() {
+      this.langs_list.push(this.languages.current)
+
+      if (this.languages.translations.length > 0) {
+        this.languages.translations.forEach(lang => {
+          this.langs_list.push(lang)
+        })
+      }
+    },
+    set_language(lang) {
+      this.$emit('switch_language', lang.id)
+    }
   }
-};
+}
 </script>
 
-<style scoped lang="scss">
-.section_lang {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 1;
-}
-</style>
+<style scoped lang="scss"></style>
 <style lang="scss">
 .lang_switcher {
   .vs__search::placeholder,

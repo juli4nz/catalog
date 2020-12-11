@@ -5,8 +5,8 @@
     </transition>
     <div class="section_content">
       <transition name="slide-fade-down">
-        <div class="body" v-if="loaded">
-          <div class="section_item" v-if="info">
+        <div v-if="loaded" class="body">
+          <div v-if="info" class="section_item">
             <!--Start Content-->
             <RestaurantInfo :info="info" />
             <TopicList :topics="topics" />
@@ -22,68 +22,68 @@
 </template>
 
 <script>
-import TopicList from "./TopicList.vue";
-import HeaderImage from "./HeaderImage.vue";
-import RestaurantInfo from "./RestaurantHeader.vue";
+import TopicList from './TopicList.vue'
+import HeaderImage from './HeaderImage.vue'
+import RestaurantInfo from './RestaurantHeader.vue'
 
 export default {
-  data: () => {
-    return {
-      api_url: "https://app.ementa.info/main/wp-json/acf/v3/ementa",
-      id: "",
-      slug: "",
-      info: {
-        title: "Ementa",
-        name: "",
-        location: "",
-        image_url: ""
-      },
-      topics: [],
-      loaded: false
-    };
-  },
   components: {
     TopicList,
     HeaderImage,
     RestaurantInfo
   },
+  data: () => {
+    return {
+      api_url: 'https://app.ementa.info/main/wp-json/acf/v3/ementa',
+      id: '',
+      slug: '',
+      info: {
+        title: 'Ementa',
+        name: '',
+        location: '',
+        image_url: ''
+      },
+      topics: [],
+      loaded: false
+    }
+  },
+  created() {
+    this.id = this.$route.params.id
+    this.slug = this.$route.params.slug
+    this.fetchData()
+  },
   methods: {
     fetchData() {
-      let req = new Request(this.api_url);
+      let req = new Request(this.api_url)
       fetch(req)
         .then(resp => {
-          if (resp.status === 200) return resp.json();
+          if (resp.status === 200) return resp.json()
         })
         .then(data => {
           data.forEach(ementa => {
             if (ementa.id == this.id) {
-              let acf = ementa.acf;
-              this.info.name = acf.restaurant.name;
-              this.info.location = acf.restaurant.location;
-              this.info.image_url = acf.restaurant.image;
-              let topics = acf.topics;
+              let acf = ementa.acf
+              this.info.name = acf.restaurant.name
+              this.info.location = acf.restaurant.location
+              this.info.image_url = acf.restaurant.image
+              let topics = acf.topics
               topics.forEach(topic => {
-                this.topics.push(topic);
-              });
-              let drink_topics = acf.drink_topics;
+                this.topics.push(topic)
+              })
+              let drink_topics = acf.drink_topics
               drink_topics.forEach(drink_topic => {
-                this.topics.push(drink_topic);
-              });
-              this.loaded = true;
+                this.topics.push(drink_topic)
+              })
+              this.loaded = true
             }
-          });
+          })
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     }
-  },
-  created() {
-    this.id = this.$route.params.id;
-    this.slug = this.$route.params.slug;
-    this.fetchData();
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

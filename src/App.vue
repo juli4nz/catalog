@@ -7,14 +7,14 @@
 </template>
 
 <script>
-export default {};
+export default {}
 </script>
 
 <style lang="scss">
-@import url("https://use.fontawesome.com/releases/v5.8.2/css/all.css");
-@import url("https://fonts.googleapis.com/css?family=Prata:400");
-@import url("https://fonts.googleapis.com/css?family=Rubik:300,500");
-@import url("./assets/fonts/allergens/allergens.css");
+@import url('https://use.fontawesome.com/releases/v5.8.2/css/all.css');
+@import url('https://fonts.googleapis.com/css?family=Prata:400');
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,500');
+@import url('./assets/fonts/allergens/allergens.css');
 * {
   box-sizing: border-box;
 }
@@ -39,13 +39,13 @@ h3,
 h4,
 h4,
 h6 {
-  font-family: "Prata";
+  font-family: 'Prata';
   font-weight: 400;
 }
 
 body,
 p {
-  font-family: "Rubik";
+  font-family: 'Rubik';
   font-weight: 300;
 }
 

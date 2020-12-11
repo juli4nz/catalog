@@ -8,16 +8,20 @@
 
 <script>
 export default {
-  props: ["info"],
+  props: ['info'],
   data: () => {
-    return {};
+    return {}
   },
-  methods:{
-    htmlToText(html){
-      return html.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  methods: {
+    htmlToText(html) {
+      return html
+        .replace(/&/g, '&amp;')
+        .replace(/>/g, '&gt;')
+        .replace(/</g, '&lt;')
+        .replace(/"/g, '&quot;')
     }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

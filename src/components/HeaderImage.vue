@@ -7,57 +7,53 @@
 </template>
 <script>
 export default {
-  props: ["styles"],
+  props: ['styles'],
   data: () => {
     return {
       opacity: 1
-    };
-  },
-  methods: {
-    handle_scroll() {
-      let scroll_pos = window.pageYOffset || document.documentElement.scrollTop;
-      let offset = this.styles.size.height - 40;
-      let scroll_rel = scroll_pos / offset;
-      let opacity = 1 - scroll_rel;
-
-      if (scroll_pos < 0) return;
-
-      this.opacity = opacity;
-    },
-    handle_resize() {
-      if (
-        ((this.$mqAliases["tablet"] || this.$mqAliases["laptop"]) &&
-          this.$mqAliases["landscape"]) ||
-        this.$mqAliases["desktop"]
-      ) {
-        window.removeEventListener("scroll", this.handle_scroll);
-      } else {
-        window.addEventListener("scroll", this.handle_scroll);
-      }
     }
   },
   computed: {
     header_styles() {
       return {
-        ...{ backgroundImage: "url(" + this.styles.image + ")" },
+        ...{ backgroundImage: 'url(' + this.styles.image + ')' },
         ...{ opacity: this.opacity }
-      };
+      }
     },
     section_styles() {
       return {
-        ...{ height: this.styles.size.height + "px" }
-      };
+        ...{ height: this.styles.size.height + 'px' }
+      }
     }
   },
   created() {
-    this.handle_scroll();
-    window.addEventListener("resize", this.handle_resize);
+    this.handle_scroll()
+    window.addEventListener('resize', this.handle_resize)
   },
   destroyed() {
-    window.removeEventListener("resize", this.handle_resize);
-    window.removeEventListener("scroll", this.handle_scroll);
+    window.removeEventListener('resize', this.handle_resize)
+    window.removeEventListener('scroll', this.handle_scroll)
+  },
+  methods: {
+    handle_scroll() {
+      let scroll_pos = window.pageYOffset || document.documentElement.scrollTop
+      let offset = this.styles.size.height - 40
+      let scroll_rel = scroll_pos / offset
+      let opacity = 1 - scroll_rel
+
+      if (scroll_pos < 0) return
+
+      this.opacity = opacity
+    },
+    handle_resize() {
+      if (((this.$mqAliases['tablet'] || this.$mqAliases['laptop']) && this.$mqAliases['landscape']) || this.$mqAliases['desktop']) {
+        window.removeEventListener('scroll', this.handle_scroll)
+      } else {
+        window.addEventListener('scroll', this.handle_scroll)
+      }
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -73,11 +69,7 @@ export default {
         left: auto;
         width: 35px;
         height: 100vh;
-        background: linear-gradient(
-          270deg,
-          rgba(255, 255, 255, 1) 0%,
-          rgba(255, 255, 255, 0) 100%
-        );
+        background: linear-gradient(270deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
       }
     }
   }
@@ -92,11 +84,7 @@ export default {
         left: auto;
         width: 35px;
         height: 100vh;
-        background: linear-gradient(
-          270deg,
-          rgba(255, 255, 255, 1) 0%,
-          rgba(255, 255, 255, 0) 100%
-        );
+        background: linear-gradient(270deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
       }
     }
   }
@@ -120,11 +108,7 @@ export default {
       height: 35px;
       width: 100%;
       background: rgb(255, 255, 255);
-      background: linear-gradient(
-        0deg,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 0) 100%
-      );
+      background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
     }
   }
 }

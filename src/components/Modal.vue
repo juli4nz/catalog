@@ -1,26 +1,13 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask" @click="$emit('close')">
+    <div class="modal-mask">
+      <button class="modal-close" @click="$emit('close')">
+        <i class="fas fa-times"></i>
+      </button>
       <div class="modal-wrapper">
         <div class="modal-container">
-          <div class="modal-header">
-            <button class="modal-close" @click="$emit('close')">
-              <i class="fas fa-times"></i>
-            </button>
-            <div class="modal-header-image">
-              <slot name="header_image"></slot>
-            </div>
-          </div>
-
-          <div class="modal-body" :class="has_image">
-            <div class="modal-body-title">
-              <slot name="title"></slot>
-            </div>
-            <slot name="body"></slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="footer"></slot>
+          <div class="modal-content">
+            <slot name="item"></slot>
           </div>
         </div>
       </div>
@@ -29,13 +16,7 @@
 </template>
 
 <script>
-export default {
-  computed: {
-    has_image() {
-      return { no_image: !this.$slots.header_image };
-    }
-  }
-};
+export default {}
 </script>
 
 <style lang="scss" scoped>
@@ -64,7 +45,7 @@ export default {
 .portrait {
   &.mobile {
     .modal-container {
-      width: calc(100% - 100px);
+      width: calc(100% - 50px);
     }
   }
   &.tablet {
@@ -84,53 +65,47 @@ export default {
   }
 }
 
+.fullscreen {
+  .modal-container {
+    width: 100% !important;
+    max-height: 100% !important;
+  }
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: table;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.95);
   transition: opacity 0.3s ease;
 }
-
 .modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
 }
-
 .modal-container {
   width: calc(100% - 100px);
-  margin: 0px auto;
+  max-height: calc(100% - 100px);
   padding: 0;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-  overflow: hidden;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
-.modal-header {
+.modal-content {
   position: relative;
-  .modal-header-image {
-    width: 100%;
-  }
-}
-
-.modal-body {
-  padding: 15px;
-  margin-bottom: 5px;
-  &.no_image {
-    margin-top: 45px;
-  }
 }
 
 .modal-close {
   position: absolute;
   top: 15px;
-  left: 15px;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
   z-index: 99999;
   outline: none;
   border: none;
@@ -159,11 +134,5 @@ export default {
 
 .modal-leave-active {
   opacity: 0;
-}
-
-.modal-enter-active .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
 }
 </style>

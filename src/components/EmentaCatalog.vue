@@ -15,46 +15,41 @@
 
 <script>
 export default {
-  props: ["catalog"],
+  props: ['catalog'],
   data: () => {
     return {
       image: {
-        width: "",
-        height: "",
+        width: '',
+        height: '',
         loaded: false
       }
-    };
-  },
-  methods: {
-    get_image_meta(url) {
-      let img = new Image();
-      img.onload = () => {
-        this.image.width = img.width;
-        this.image.height = img.height;
-        this.image.loaded = true;
-        this.resize();
-      };
-      img.src = url;
-    },
-    resize() {
-      let size = this.calculateAspectRatioFit(
-        this.image.width,
-        this.image.height,
-        window.innerWidth,
-        window.innerHeight - 150
-      );
-      this.$emit("resize", size);
-    },
-    calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
-      let ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
-      return { width: srcWidth * ratio, height: srcHeight * ratio };
     }
   },
   created() {
-    this.$emit("update");
-    this.get_image_meta(this.catalog.single.image);
+    this.$emit('update')
+    this.get_image_meta(this.catalog.single.image)
+  },
+  methods: {
+    get_image_meta(url) {
+      let img = new Image()
+      img.onload = () => {
+        this.image.width = img.width
+        this.image.height = img.height
+        this.image.loaded = true
+        this.resize()
+      }
+      img.src = url
+    },
+    resize() {
+      let size = this.calculateAspectRatioFit(this.image.width, this.image.height, window.innerWidth, window.innerHeight - 150)
+      this.$emit('resize', size)
+    },
+    calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+      let ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight)
+      return { width: srcWidth * ratio, height: srcHeight * ratio }
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -70,7 +65,7 @@ export default {
 }
 .product {
   .price {
-    font-family: "Prata";
+    font-family: 'Prata';
     font-weight: 400;
     color: #000;
     padding-right: 10px;

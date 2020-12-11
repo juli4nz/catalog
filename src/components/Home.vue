@@ -8,21 +8,21 @@
   </div>
 </template>
 <script>
-import bg_image_url from "@/assets/bg.png";
-import logo_url from "@/assets/ementa_digital_color.png";
+import bg_image_url from '@/assets/bg.png'
+import logo_url from '@/assets/ementa_digital_color.png'
 export default {
   data: () => {
     return {
       bg_image_url: bg_image_url,
       logo_url: logo_url
-    };
+    }
   },
   computed: {
     bg_style() {
-      return { backgroundImage: "url(" + this.bg_image_url + ")" };
+      return { backgroundImage: 'url(' + this.bg_image_url + ')' }
     }
   }
-};
+}
 </script>
 <style scoped lang="scss">
 .wrapper {
