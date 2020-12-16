@@ -1,8 +1,11 @@
 <template>
-  <div class="section_list">
+  <div class="section_list" :class="list_type">
     <div v-for="(topic, index) in topics" :key="index" class="item" :class="is_product(topic)" @click="goto(topic, index)">
       <div class="thumbs">
-        <img :src="topic.image_bottle ? topic.image_bottle.url : topic.image.url ? topic.image.url : topic.image" :alt="topic.image_bottle ? topic.image_bottle.alt : topic.image.alt" />
+        <img
+          :src="topic.image_bottle ? topic.image_bottle.url : topic.image.url ? topic.image.url : topic.image"
+          :alt="topic.image_bottle ? topic.image_bottle.alt : topic.image.alt"
+        />
       </div>
       <div class="title">
         <h2>{{ topic.name }}</h2>
@@ -15,15 +18,17 @@
 <script>
 export default {
   props: ['topics', 'slugs'],
+  data: () => {
+    return {
+      list_type: 'categories'
+    }
+  },
   computed: {
     level() {
       if (this.$route.params.c_slug) return 3
       if (this.$route.params.b_slug) return 2
       if (this.$route.params.a_slug) return 1
       return 0
-    },
-    is_home() {
-      return this.level == 0 ? false : true
     }
   },
   methods: {
@@ -94,28 +99,27 @@ export default {
       }
     },
     is_product(item) {
-      return item.has_topics || item.products ? 'style2' : 'style1'
+      if (item.has_topics || item.products) {
+        this.list_type = 'categories'
+        return 'style2'
+      } else {
+        this.list_type = 'products'
+        return 'style1'
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@mixin define-cols($cols, $gap, $h) {
-  .section_list {
-    grid-template-columns: repeat($cols, 1fr);
-    gap: $gap;
-    .item {
-      height: calc(100vw * $h);
-    }
-  }
-}
-
 .mobile {
   &.landscape {
     .section_list {
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
+      &.products {
+        grid-template-columns: repeat(4, 1fr);
+      }
       .item > .thumbs,
       .item.style2 {
         height: calc(100vw * 0.25);
@@ -128,6 +132,9 @@ export default {
     .section_list {
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
+      &.products {
+        grid-template-columns: repeat(4, 1fr);
+      }
       .item > .thumbs,
       .item.style2 {
         height: calc(100vw * 0.2);
@@ -138,6 +145,9 @@ export default {
     .section_list {
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
+      &.products {
+        grid-template-columns: repeat(4, 1fr);
+      }
       .item > .thumbs,
       .item.style2 {
         height: calc(100vw * 0.25);
@@ -150,6 +160,9 @@ export default {
     .section_list {
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
+      &.products {
+        grid-template-columns: repeat(4, 1fr);
+      }
       .item > .thumbs,
       .item.style2 {
         height: calc(100vw * 0.18);
@@ -160,6 +173,9 @@ export default {
     .section_list {
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
+      &.products {
+        grid-template-columns: repeat(5, 1fr);
+      }
       .item > .thumbs,
       .item.style2 {
         height: calc(100vw * 0.18);
@@ -172,6 +188,9 @@ export default {
     .section_list {
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
+      &.products {
+        grid-template-columns: repeat(5, 1fr);
+      }
       .item > .thumbs,
       .item.style2 {
         height: calc(100vw * 0.11);
@@ -182,6 +201,9 @@ export default {
     .section_list {
       grid-template-columns: repeat(3, 1fr);
       gap: 15px;
+      &.products {
+        grid-template-columns: repeat(4, 1fr);
+      }
       .item > .thumbs,
       .item.style2 {
         height: calc(100vw * 0.15);
@@ -192,10 +214,13 @@ export default {
 
 .section_list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 5px;
   width: 100%;
   margin-bottom: 25px;
+  &.products {
+    grid-template-columns: repeat(3, 1fr);
+  }
   .item {
     position: relative;
     width: 100%;
@@ -229,6 +254,10 @@ export default {
           margin: 0;
           padding: 0;
           text-align: center;
+          overflow-wrap: break-word;
+          -webkit-hyphens: auto;
+          -moz-hyphens: auto;
+          hyphens: auto;
         }
       }
     }

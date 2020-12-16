@@ -1,8 +1,8 @@
 <template>
   <div id="app" :class="$mqAliases">
-    <transition name="fade">
-      <router-view />
-    </transition>
+    <!--<transition name="fade">-->
+    <router-view />
+    <!--</transition>-->
   </div>
 </template>
 
@@ -13,8 +13,9 @@ export default {}
 <style lang="scss">
 @import url('https://use.fontawesome.com/releases/v5.8.2/css/all.css');
 @import url('https://fonts.googleapis.com/css?family=Prata:400');
-@import url('https://fonts.googleapis.com/css?family=Rubik:300,500');
-@import url('./assets/fonts/allergens/allergens.css');
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,500,700');
+
+/** Basic Styles */
 * {
   box-sizing: border-box;
 }
@@ -49,41 +50,50 @@ p {
   font-weight: 300;
 }
 
-.slide-fade-up-enter-active {
-  transition: all 0.5s ease-out;
-}
-.slide-fade-up-enter {
-  transform: translateY(-200px);
-  opacity: 0;
+button {
+  cursor: pointer;
 }
 
-.slide-fade-down-enter-active {
-  transition: all 0.5s ease-out;
+/** Transitions */
+
+.slide-fade-up-enter-active,
+.slide-fade-down-enter-active,
+.slide-fade-left-enter-active,
+.slide-fade-right-enter-active,
+.fade-enter-active,
+.slide-fade-up-leave-active,
+.slide-fade-down-leave-active,
+.slide-fade-left-leave-active,
+.slide-fade-right-leave-active,
+.fade-leave-active {
+  transition: all 0.3s ease-out;
 }
-.slide-fade-down-enter {
-  transform: translateY(300px);
+/** fade up */
+.slide-fade-up-enter,
+.slide-fade-up-leave-to {
+  transform: translateY(-50px);
   opacity: 0;
 }
-
-.slide-fade-left-enter-active {
-  transition: all 0.5s ease-out;
+/** fade down */
+.slide-fade-down-enter,
+.slide-fade-down-leave-to {
+  transform: translateY(50px);
+  opacity: 0;
 }
-.slide-fade-left-enter {
+/** fade left */
+.slide-fade-left-enter,
+.slide-fade-left-leave-to {
   transform: translateX(50px);
   opacity: 0;
 }
-
-.slide-fade-right-enter-active {
-  transition: all 0.5s ease-out;
-}
-.slide-fade-right-enter {
+/** fade right */
+.slide-fade-right-enter,
+.slide-fade-right-leave-to {
   transform: translateX(-50px);
   opacity: 0;
 }
-
-.fade-leave-active {
-  transition: all 0.5s ease-in;
-}
+/** fade */
+.fade-enter,
 .fade-leave-to {
   opacity: 0;
 }

@@ -1,103 +1,72 @@
 <template>
-  <div>
-    <!-- Single Product -->
-    <div class="product_details">
-      <div class="product_header block">
-        <div class="thumbs">
-          <div class="thumbs_wrapper">
-            <img :src="main_image.url" :alt="main_image.name" class="image_content" />
-          </div>
+  <!-- Single Product -->
+  <div class="product_details">
+    <div class="product_header block">
+      <div class="thumbs">
+        <div class="thumbs_wrapper">
+          <img :src="image.url" :alt="image.name" class="image_content" />
         </div>
-        <ul class="header_details">
-          <li class="title">{{ item.name }}</li>
-          <li class="price">
-            <span>{{ Number(item.price).toFixed(2) }}</span>
-            <span class="price_symbol">€</span>
-          </li>
-          <li class="region">{{ item.region }}</li>
-          <li class="country">{{ item.country }}</li>
-          <li class="type">{{ item.type }}</li>
-          <li class="year">{{ item.year }}</li>
-        </ul>
       </div>
-
-      <ul class="product_table block">
-        <li class="alchool">
-          <div class="title">
-            <i class="fas fa-percentage"></i>
-            <h4>Teor Álcool</h4>
-          </div>
-
-          <span>{{ item.alchool }}</span>
+      <ul class="header_details">
+        <li class="title">{{ item.name }}</li>
+        <li class="price">
+          <span>{{ Number(item.price).toFixed(2) }}</span>
+          <span class="price_symbol">€</span>
         </li>
-        <li class="sizes">
-          <div class="title">
-            <i class="fas fa-wine-bottle"></i>
-            <h4>Capacidades</h4>
-          </div>
-          <span>{{ item.sizes }}</span>
-        </li>
-        <li class="varieties">
-          <div class="title">
-            <i class="fab fa-envira"></i>
-            <h4>Castas</h4>
-          </div>
-          <span>{{ item.varieties }}</span>
-        </li>
-        <li class="enologist">
-          <div class="title">
-            <i class="fas fa-wine-glass"></i>
-            <h4>Enólogos</h4>
-          </div>
-          <span>{{ item.enologist }}</span>
-        </li>
-      </ul>
-      <ul class="product_text block">
-        <li class="taste_note">
-          <div class="title">
-            <i class="fas fa-clipboard"></i>
-            <h4>Notas de Prova</h4>
-          </div>
-          <span>{{ item.taste_note }}</span>
-        </li>
-        <li class="more_info">
-          <div class="title">
-            <i class="fas fa-file-alt"></i>
-            <h4>Informações Adicionais</h4>
-          </div>
-          <span>{{ item.info }}</span>
-        </li>
+        <li class="region">{{ item.region }}</li>
+        <li class="country">{{ item.country }}</li>
+        <li class="type">{{ item.type }}</li>
+        <li class="year">{{ item.year }}</li>
       </ul>
     </div>
 
-    <!-- START Modal -->
-    <!--
-    <modal
-      v-if="modal.display"
-      @close="modal.display = false"
-      class="modal_item"
-    >
-      <slick-carousel slot="item" v-bind="carousel.settings">
-        <div>
-          <img
-            v-if="item.image"
-            :src="item.image.url"
-            :alt="item.name"
-            class="modal_image"
-          />
+    <ul class="product_table block">
+      <li class="alchool" v-if="item.alchool">
+        <div class="title">
+          <i class="fas fa-percentage"></i>
+          <h4>Teor Álcool</h4>
         </div>
-        <div v-for="(image, index) in item.gallery" :key="index">
-          <img
-            v-if="image"
-            :src="image.url"
-            :alt="image.alt"
-            class="modal_image"
-          />
+
+        <span>{{ item.alchool }}</span>
+      </li>
+      <li class="producer" v-if="item.cellar">
+        <div class="title">
+          <i class="fas fa-wine-bottle"></i>
+          <h4>Adega</h4>
         </div>
-      </slick-carousel>
-    </modal>
-    -->
-    <!-- END Modal -->
+        <span>{{ item.cellar }}</span>
+      </li>
+      <li class="varieties" v-if="item.varieties">
+        <div class="title">
+          <i class="fab fa-envira"></i>
+          <h4>Castas</h4>
+        </div>
+        <span>{{ item.varieties }}</span>
+      </li>
+      <li class="enologist" v-if="item.enologist">
+        <div class="title">
+          <i class="fas fa-wine-glass"></i>
+          <h4>Enólogos</h4>
+        </div>
+        <span>{{ item.enologist }}</span>
+      </li>
+    </ul>
+    <ul class="product_text block" v-if="item.taste_note">
+      <li class="taste_note">
+        <div class="title">
+          <i class="fas fa-clipboard"></i>
+          <h4>Notas de Prova</h4>
+        </div>
+        <div v-html="item.taste_note"></div>
+      </li>
+      <li class="more_info" v-if="item.info">
+        <div class="title">
+          <i class="fas fa-file-alt"></i>
+          <h4>Informações Adicionais</h4>
+        </div>
+        <div v-html="item.info"></div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -105,64 +74,36 @@
 export default {
   props: ['topics'],
   data: () => {
-    return {
-      modal: {
-        display: false
-      },
-      carousel: {
-        settings: {
-          dots: true,
-          fade: true,
-          infinite: true,
-          speed: 500,
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          adaptiveHeight: true,
-          edgeFriction: 0.35
-        }
-      },
-      image: {
-        width: '',
-        height: '',
-        loaded: false
-      }
-    }
+    return {}
   },
   computed: {
-    item: function() {
+    item() {
       return this.topics.single
     },
-    main_image: function() {
+    image() {
       let item = this.item
       return item.image_bottle.url ? item.image_bottle : item.image
+    },
+    header_image() {
+      let item = this.item
+      return item.image.url ? item.image : item.image_bottle
     }
   },
   created() {
     this.$emit('update')
-    this.set_image_meta(this.topics.single.image.url)
+    this.set_size(this.header_image.url)
   },
   methods: {
-    display_modal(item) {
-      if (item.image.url || item.gallery.length > 0) {
-        this.modal.display = true
-        this.item = item
-      }
-    },
-    set_image_meta(url) {
+    set_size(url) {
       let img = new Image()
       img.onload = () => {
-        this.image.width = img.width
-        this.image.height = img.height
-        this.image.loaded = true
-        this.resize()
+        let margin = 150
+        let size = this.get_aspect_ratio(img.width, img.height, window.innerWidth, window.innerHeight - margin)
+        this.$emit('resize', size)
       }
       img.src = url
     },
-    resize() {
-      let size = this.calculateAspectRatioFit(this.image.width, this.image.height, window.innerWidth, window.innerHeight - 150)
-      this.$emit('resize', size)
-    },
-    calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+    get_aspect_ratio(srcWidth, srcHeight, maxWidth, maxHeight) {
       let ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight)
       return { width: srcWidth * ratio, height: srcHeight * ratio }
     }
@@ -190,11 +131,13 @@ export default {
     .thumbs {
       width: 30%;
       position: relative;
+      min-height: 185px;
       .thumbs_wrapper {
-        width: 50px;
+        width: 65px;
         position: relative;
         left: 50%;
         transform: translateX(-50%);
+        height: 100%;
       }
       img {
         width: 100%;

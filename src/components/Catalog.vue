@@ -1,22 +1,22 @@
 <template>
-  <div id="ementa" class="wrapper">
+  <div id="catalog" class="wrapper">
     <!--- START header -->
     <div class="section_header">
       <!--- START controls -->
       <div class="section_controls">
         <!-- back button -->
-        <transition name="slide-fade-left">
+        <transition name="fade">
           <button v-if="!is_home" class="back_btn" @click="go_back">
             <i class="fas fa-arrow-left"></i>
           </button>
         </transition>
         <!-- language switcher -->
-        <transition name="slide-fade-right">
-          <LanguageSwitcher v-if="loaded && is_home" :languages="languages" @switch_language="set_language" />
+        <transition name="fade">
+          <LanguageSwitcher v-if="loaded && is_home" :languages="languages" @switch_language="set_language()" />
         </transition>
         <!-- intro video -->
-        <transition name="slide-fade-right">
-          <button v-if="loaded && is_home" class="video_btn" @click="display_modal()">
+        <transition name="fade">
+          <button v-if="loaded && is_home" class="video_btn" @click="display_video_modal()">
             <i class="fas fa-play-circle"></i>
           </button>
         </transition>
@@ -32,34 +32,36 @@
 
     <!-- START content -->
     <div class="section_content" :style="styles.content">
-      <transition name="slide-fade-down">
-        <div v-if="loaded" class="body" :style="styles.body">
-          <div class="section_item">
-            <!-- START content view -->
-            <router-view
-              :key="$route.fullPath"
-              :restaurant="restaurant"
-              :topics="topics"
-              :notes="notes"
-              @update="filter_data"
-              @resize="resize_image"
-            />
-            <!-- END content view -->
-          </div>
+      <transition name="slide-fade-down" mode="out-in">
+        <div v-if="loaded" class="body" :key="$route.fullPath" :style="styles.body">
+          <!-- START content view -->
+          <router-view :restaurant="restaurant" :topics="topics" :notes="notes" @update="filter_data" @resize="resize_itens" />
+          <!-- END content view -->
         </div>
       </transition>
-      <!-- START loader -->
-      <div v-if="!loaded" class="loading">
-        <i class="fas fa-spinner fa-pulse"></i>
-      </div>
+      <transition name="slide-fade-down">
+        <div v-if="!loaded" class="loading">
+          <i class="fas fa-spinner fa-pulse"></i>
+        </div>
+      </transition>
       <!-- END loader -->
     </div>
     <!-- END content -->
 
     <!-- START Modal -->
-    <modal v-if="modal.display" class="modal_item" :class="modal.fullscreen" @close="hide_modal()">
+    <modal v-if="modal.display" class="modal_item" :class="modal.fullscreen" @close="hide_video_modal()">
+      <!-- START notice element -->
+      <div class="notice" slot="notice" v-if="modal.notice">
+        <h3 class="title">Tem mais de 18 anos?</h3>
+        <ul class="buttons">
+          <li>
+            <button @click="hide_notice_modal()"><span>Entrar </span></button>
+          </li>
+        </ul>
+      </div>
+      <!-- END notice element -->
       <!-- START video element -->
-      <vue-plyr ref="plyr" slot="item" :options="video.options">
+      <vue-plyr v-if="!modal.notice" ref="plyr" slot="item" :options="video.options" :style="video.style">
         <video controls playsinline :data-poster="video.poster">
           <source v-for="(file, index) in video.files" :key="index" :size="file.height" :src="file.url" :type="file.mime_type" />
         </video>
@@ -82,8 +84,8 @@ export default {
   },
   data: () => {
     return {
-      //api_url: "http://app.ementa.web/wp-json/wp/v2/catalogs",
-      //lang_api_url: "http://app.ementa.web/wp-json/pll/v1/languages",
+      //api_url: 'http://app.ementa.web/wp-json/wp/v2/catalogs',
+      //lang_api_url: 'http://app.ementa.web/wp-json/pll/v1/languages',
       api_url: 'http://catalogo.agencydima.com/main/wp-json/wp/v2/catalogs',
       lang_api_url: 'http://catalogo.agencydima.com/main/wp-json/pll/v1/languages',
       post: {
@@ -111,26 +113,30 @@ export default {
       },
       styles: {
         header: {
-          size: '',
+          height: '',
           image: ''
         },
-        content: {}
+        content: {},
+        body: {}
       },
       modal: {
         display: false,
-        fullscreen: ''
+        fullscreen: '',
+        notice: true
       },
       video: {
         player: '',
         options: {
-          controls: ['play-large', 'fullscreen'],
-          autoplay: true,
+          controls: ['play-large', 'fullscreen', 'mute'],
+          //autoplay: true,
           fullscreen: { container: '.modal_item' }
         },
         poster: '',
-        files: {}
+        files: {},
+        style: '--plyr-color-main: rgb(175, 55, 95);'
       },
-      loaded: false
+      loaded: false,
+      once: false
     }
   },
   computed: {
@@ -161,14 +167,8 @@ export default {
     }
   },
   updated() {
-    if (this.$refs.plyr.player) {
-      let player = this.$refs.plyr.player
-      player.on('enterfullscreen', () => {
-        this.modal.fullscreen = 'fullscreen'
-      })
-      player.on('exitfullscreen', () => {
-        this.modal.fullscreen = ''
-      })
+    if (this.modal.display && !this.modal.notice) {
+      this.video.player = this.$refs.plyr.player
     }
   },
   created() {
@@ -259,7 +259,7 @@ export default {
 
           this.filter_data()
           this.loaded = true
-          if (this.is_home) this.display_modal()
+          if (this.is_home) this.display_notice_modal()
         })
         .catch(err => {
           console.log(err)
@@ -280,7 +280,7 @@ export default {
         case 0:
           {
             // Info
-            this.set_header_style(this.restaurant.image)
+            this.set_header_image(this.restaurant.image)
             this.restaurant.title = 'Catálogo de Vinhos'
 
             // Topics
@@ -297,7 +297,7 @@ export default {
 
             // Info
             let sub_topic = this.topics.all[index]
-            this.set_header_style(sub_topic.image)
+            this.set_header_image(sub_topic.image)
             this.restaurant.title = sub_topic.name
 
             // Topics or products
@@ -323,7 +323,7 @@ export default {
 
             // Info
             let sub_item = itens[index2]
-            this.set_header_style(sub_item.image)
+            this.set_header_image(sub_item.image)
             this.restaurant.title = sub_item.name
 
             // Topics or products or single product
@@ -358,7 +358,7 @@ export default {
             let index3 = itens.findIndex(topic => this.sanitize(topic.name) === this.current_slug)
 
             sub_item = itens[index3]
-            this.set_header_style(sub_item.image)
+            this.set_header_image(sub_item.image)
             this.restaurant.title = sub_item.name
 
             // Topics or products or single product
@@ -377,14 +377,14 @@ export default {
           break
       }
     },
-    resize_image(size) {
-      this.styles.header.size = size
-      this.styles.content = { marginTop: `${size.height - 40}px` }
-      this.styles.body = {
-        minHeight: `calc(100vh - ${size.height}px)`
-      }
+    resize_itens(size) {
+      let def_height = 180
+      let height = size ? size.height : def_height
+      this.styles.header.height = height
+      this.styles.content = { marginTop: `${height - 40}px` }
+      this.styles.body = { minHeight: `calc(100vh - ${height}px)` }
     },
-    set_header_style(image) {
+    set_header_image(image) {
       this.styles.header.image = image.url ? image.url : image
     },
     set_language(id) {
@@ -424,22 +424,55 @@ export default {
     is_array(arr) {
       return this.exists(arr) && Array.isArray(arr) && arr.length
     },
-    display_modal() {
+    display_video_modal() {
       this.modal.display = true
-      this.$nextTick(function() {
-        let player = this.$refs.plyr.player
+      this.modal.notice = false
+      this.add_player_events()
+      this.$nextTick(() => {
+        let player = this.video.player
         player.play()
         player.fullscreen.enter()
       })
     },
-    hide_modal() {
+    hide_video_modal() {
       this.modal.display = false
-      this.$nextTick(function() {
-        let player = this.$refs.plyr.player
-        player.stop()
-        if (player.fullscreen.active) {
-          player.fullscreen.exit()
-        }
+      this.remove_player_events()
+      let player = this.video.player
+      player.stop()
+      if (player.fullscreen.active) {
+        player.fullscreen.exit()
+      }
+    },
+    display_notice_modal() {
+      this.modal.display = true
+      this.modal.notice = true
+    },
+    hide_notice_modal() {
+      this.modal.display = false
+      this.modal.notice = false
+
+      this.display_video_modal()
+    },
+    add_player_events() {
+      this.$nextTick(() => {
+        let player = this.video.player
+        player.on('enterfullscreen', () => {
+          this.modal.fullscreen = 'fullscreen'
+        })
+        player.on('exitfullscreen', () => {
+          this.modal.fullscreen = ''
+        })
+        player.on('ended', () => {
+          this.hide_video_modal()
+        })
+      })
+    },
+    remove_player_events() {
+      this.$nextTick(() => {
+        let player = this.video.player
+        player.off('enterfullscreen')
+        player.off('exitfullscreen')
+        player.off('ended')
       })
     }
   }
@@ -487,6 +520,7 @@ $bg-img: url('../assets/bg.png');
   min-height: calc(100vh);
   z-index: -1;
   background-image: $bg-img;
+  background-attachment: fixed;
   .section_header {
     position: relative;
     .section_controls {
@@ -528,18 +562,10 @@ $bg-img: url('../assets/bg.png');
       }
     }
   }
-  .section_bg {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    min-height: calc(100vh - 20px);
-    z-index: -1;
-    background-image: $bg-img;
-  }
   .section_content {
     margin-top: 160px;
+    transition: all 0.5s;
+    scroll-behavior: smooth;
     .loading {
       position: absolute;
       font-size: 4rem;
@@ -559,6 +585,51 @@ $bg-img: url('../assets/bg.png');
       padding: 15px;
       border-radius: 5px;
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+.notice {
+  text-align: center;
+  color: #fff;
+  ul {
+    display: flex;
+    justify-content: center;
+    button {
+      background: #fff;
+      border-radius: 5px;
+      outline: none;
+      border: none;
+      padding: 10px 25px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #fff;
+      font-family: 'Rubik';
+      transition: all 0.5s;
+      background: rgb(175, 55, 95);
+      & span {
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
+        &:after {
+          content: '\f72f';
+          position: absolute;
+          opacity: 0;
+          top: 0;
+          right: -20px;
+          transition: 0.5s;
+          font-family: 'Font Awesome 5 Free';
+          font-weight: 900;
+        }
+      }
+      &:hover span,
+      &:active span {
+        padding-right: 25px;
+        &:after {
+          opacity: 1;
+          right: 0;
+        }
+      }
     }
   }
 }

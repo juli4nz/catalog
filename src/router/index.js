@@ -74,7 +74,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  window.scrollTo(0, 0)
+  //window.scrollTo(0, 0)
   next()
 })
 

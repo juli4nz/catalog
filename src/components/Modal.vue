@@ -1,12 +1,13 @@
 <template>
   <transition name="modal">
     <div class="modal-mask">
-      <button class="modal-close" @click="$emit('close')">
+      <button v-if="showClose" class="modal-close" @click="$emit('close')">
         <i class="fas fa-times"></i>
       </button>
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-content">
+            <slot name="notice"></slot>
             <slot name="item"></slot>
           </div>
         </div>
@@ -16,7 +17,24 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      showClose: true
+    }
+  },
+  created() {
+    this.hasNoticeSlot()
+  },
+  beforeUpdate() {
+    this.hasNoticeSlot()
+  },
+  methods: {
+    hasNoticeSlot() {
+      this.showClose = !this.$slots.notice?.[0]
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -79,7 +97,7 @@ export default {}
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.95);
+  background-color: rgba(0, 0, 0, 0.98);
   transition: opacity 0.3s ease;
 }
 .modal-wrapper {
@@ -128,11 +146,16 @@ export default {}
  * these styles.
  */
 
-.modal-enter-active {
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.5s ease-out;
+}
+
+.modal-enter {
   opacity: 1;
 }
 
-.modal-leave-active {
+.modal-leave-to {
   opacity: 0;
 }
 </style>
