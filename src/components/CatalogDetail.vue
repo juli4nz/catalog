@@ -51,13 +51,25 @@
         <span>{{ item.enologist }}</span>
       </li>
     </ul>
-    <ul class="product_text block" v-if="item.taste_note">
-      <li class="taste_note">
+    <ul class="product_text block">
+      <li class="taste_note" v-if="item.taste_note">
         <div class="title">
           <i class="fas fa-clipboard"></i>
           <h4>Notas de Prova</h4>
         </div>
         <div v-html="item.taste_note"></div>
+      </li>
+      <li class="foods" v-if="Array.isArray(item.foods) && item.foods.length">
+        <div class="title">
+          <i class="fas fa-utensils"></i>
+          <h4>Sugestões Gastronómicas</h4>
+        </div>
+        <ul class="food_list">
+          <li v-for="(food, index) in item.foods" :key="index" class="food_item">
+            <span class="food_icon" :class="'icon-' + food.value"></span>
+            <span class="food_name">{{ food.label }}</span>
+          </li>
+        </ul>
       </li>
       <li class="more_info" v-if="item.info">
         <div class="title">
@@ -125,7 +137,6 @@ export default {
   }
   .product_header {
     display: flex;
-    /*  flex-direction: column; */
     max-width: 100%;
     width: auto;
     .thumbs {
@@ -187,7 +198,6 @@ export default {
     flex-wrap: wrap;
     & > li {
       width: 50%;
-      text-align: left;
       padding: 0 10px;
       margin-bottom: 15px;
       font-size: 0.9rem;
@@ -205,7 +215,7 @@ export default {
     .title {
       display: flex;
       font-size: 0.75rem;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       i {
         margin-right: 5px;
         color: rgb(145, 47, 47);
@@ -221,12 +231,12 @@ export default {
   .product_text {
     & > li {
       font-size: 0.9rem;
-      margin-bottom: 15px;
+      margin-bottom: 25px;
     }
     .title {
       display: flex;
       font-size: 0.75rem;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       i {
         margin-right: 5px;
         color: rgb(145, 47, 47);
@@ -236,6 +246,28 @@ export default {
         margin: 0;
         font-weight: 400;
         text-transform: uppercase;
+      }
+    }
+    .food_list {
+      display: flex;
+      justify-content: left;
+      flex-wrap: wrap;
+      .food_item {
+        margin-right: 15px;
+        margin-bottom: 5px;
+        text-align: center;
+        max-width: 80px;
+        &:last-child {
+          margin-right: 0;
+        }
+        .food_icon {
+          font-size: 2rem;
+          display: inline-block;
+          margin: 0 auto;
+        }
+        .food_name {
+          display: block;
+        }
       }
     }
   }

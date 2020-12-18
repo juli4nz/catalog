@@ -14,6 +14,7 @@ export default {}
 @import url('https://use.fontawesome.com/releases/v5.8.2/css/all.css');
 @import url('https://fonts.googleapis.com/css?family=Prata:400');
 @import url('https://fonts.googleapis.com/css?family=Rubik:300,500,700');
+@import url('./assets/fonts/foods/foods.css');
 
 /** Basic Styles */
 * {
@@ -48,6 +49,10 @@ body,
 p {
   font-family: 'Rubik';
   font-weight: 300;
+}
+
+p {
+  margin: 0;
 }
 
 button {
